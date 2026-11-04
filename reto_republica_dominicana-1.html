@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07152f">
+<title>¡Reto República Dominicana!</title>
+<style>
+:root{--navy:#07152f;--navy2:#10264a;--cyan:#21e0d0;--gold:#ffd166;--white:#f7fbff;--muted:#b8c8df;--red:#e5394f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--white);background:radial-gradient(circle at 15% 10%,#173c68 0,transparent 35%),radial-gradient(circle at 90% 90%,#114d59 0,transparent 32%),linear-gradient(135deg,var(--navy),#081d3c 65%,#07152f)}
+main{width:min(920px,100%);margin:auto;padding:22px 16px 48px}
+header{text-align:center;padding:16px 0 20px}
+.flag{display:inline-flex;gap:5px;align-items:center;padding:7px 13px;border:1px solid #ffffff30;border-radius:99px;background:#ffffff0d;color:var(--muted);font-size:.85rem}
+h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.05;margin:16px 0 8px;letter-spacing:-1.5px}
+h1 span{color:var(--cyan)}
+.sub{color:var(--muted);margin:0}
+.panel{background:#ffffff0d;border:1px solid #ffffff20;border-radius:24px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 55px #0003;backdrop-filter:blur(8px)}
+.center{text-align:center}
+button,input{font:inherit}
+button{border:0;border-radius:15px;padding:14px 20px;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.07)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.primary{background:linear-gradient(100deg,var(--cyan),#83fff1);color:#05243a;font-size:1.05rem;min-width:min(100%,260px)}
+.secondary{background:#ffffff16;color:var(--white);border:1px solid #ffffff30}
+.gold{background:var(--gold);color:#332300}
+input{width:100%;padding:15px 16px;border-radius:13px;border:1px solid #ffffff38;background:#06152d;color:white;margin:12px 0 18px}
+label{display:block;text-align:left;font-weight:700}
+.hidden{display:none!important}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.progress{height:9px;background:#ffffff20;border-radius:99px;overflow:hidden;margin:0 0 20px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width .25s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.92rem;margin-bottom:10px}
+.question{font-size:clamp(1.3rem,4vw,1.8rem);line-height:1.25;margin:12px 0 22px}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer{background:#ffffff12;border:1px solid #ffffff25;color:white;text-align:left;min-height:64px}
+.answer.correct{background:#0c765f;border-color:#56f3c2}
+.answer.wrong{background:#8c2939;border-color:#ff9ca8}
+.feedback{min-height:28px;margin-top:15px;font-weight:800}
+.scoreline{color:var(--gold);font-weight:800}
+.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:end;margin:25px 0}
+.place{border:1px solid #ffffff25;background:#ffffff0d;border-radius:16px;padding:15px 8px;text-align:center;overflow-wrap:anywhere}
+.place.first{border-color:var(--gold);background:#ffd16618;min-height:150px}
+.place.second{min-height:125px}
+.place.third{min-height:110px}
+.medal{font-size:2rem}
+.place strong{display:block;margin:7px 0}
+.place small{color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin-top:14px}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #ffffff20}
+th{color:var(--cyan);font-size:.9rem}
+td:last-child,th:last-child{text-align:right}
+.note{color:var(--muted);font-size:.84rem;line-height:1.5;margin-top:18px}
+footer{text-align:center;color:#9fb2cd;font-size:.8rem;margin-top:22px}
+@media(max-width:560px){.answers{grid-template-columns:1fr}.podium{gap:6px}.place{padding:12px 5px;font-size:.9rem}main{padding-inline:12px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <div class="flag">🇩🇴 CULTURA · CONOCIMIENTO · DEPORTE</div>
+ <h1>¡Reto <span>República Dominicana!</span></h1>
+ <p class="sub">Escucha la defensa, participa y demuestra lo que aprendiste.</p>
+</header>
+
+<section id="home" class="panel center">
+ <h2>¿Listo para jugar?</h2>
+ <p class="sub">Un juego para jurados y visitantes de la feria.</p>
+ <div style="max-width:420px;margin:24px auto 0">
+  <label for="playerName">Escribe tu nombre</label>
+  <input id="playerName" maxlength="35" placeholder="Tu nombre o apodo" autocomplete="name">
+  <button class="primary" id="startBtn">ENTRAR A JUGAR 🎮</button>
+ </div>
+ <div class="actions"><button class="secondary" id="showRanks">🏆 Ver podio</button></div>
+</section>
+
+<section id="game" class="panel hidden">
+ <div class="meta"><span id="counter">Pregunta 1 de 10</span><span class="scoreline">Puntos: <b id="score">0</b></span></div>
+ <div class="progress"><div id="bar"></div></div>
+ <div class="flag" id="category">CULTURA</div>
+ <h2 class="question" id="question"></h2>
+ <div class="answers" id="answers"></div>
+ <div class="feedback" id="feedback" aria-live="polite"></div>
+ <div class="actions"><button class="primary hidden" id="nextBtn">Siguiente ➜</button></div>
+</section>
+
+<section id="result" class="panel center hidden">
+ <div style="font-size:3rem">🎉</div>
+ <h2>¡Terminaste!</h2>
+ <p id="resultText"></p>
+ <p class="scoreline" id="resultScore"></p>
+ <div class="actions"><button class="primary" id="playAgain">Jugar otra vez</button><button class="secondary" id="toRanks">Ver podio 🏆</button></div>
+</section>
+
+<section id="ranks" class="panel hidden">
+ <div class="center"><div style="font-size:2.4rem">🏆</div><h2>Tabla de posiciones</h2><p class="sub">Los participantes con más puntos aparecen primero.</p></div>
+ <div id="podium" class="podium"></div>
+ <table><thead><tr><th>Posición</th><th>Participante</th><th>Puntos</th></tr></thead><tbody id="rankingRows"></tbody></table>
+ <p class="note">Los resultados se guardan en este navegador y dispositivo. Para que todos vean una misma tabla en distintos teléfonos se necesita conectar una base de datos compartida.</p>
+ <div class="actions"><button class="primary" id="backHome">Volver al inicio</button><button class="secondary" id="resetRanks">Reiniciar tabla</button></div>
+</section>
+<footer>Aprendiendo y jugando con República Dominicana 🇩🇴</footer>
+</main>
+<script>
+const questions = [
+ {c:"GEOGRAFÍA",q:"¿Cuál es la capital de la República Dominicana?",a:["Santo Domingo","Santiago de Cuba","San Juan","Puerto Príncipe"],k:0},
+ {c:"GEOGRAFÍA",q:"¿En qué isla se encuentra la República Dominicana?",a:["Cuba","La Española","Jamaica","Puerto Rico"],k:1},
+ {c:"SÍMBOLOS PATRIOS",q:"¿Cuáles son los colores principales de la bandera dominicana?",a:["Verde y amarillo","Azul, rojo y blanco","Negro y rojo","Azul y verde"],k:1},
+ {c:"HISTORIA",q:"¿Qué día se celebra la Independencia Dominicana?",a:["6 de agosto","12 de octubre","27 de febrero","25 de diciembre"],k:2},
+ {c:"CULTURA",q:"¿Cuál de estos ritmos musicales es originario de República Dominicana?",a:["Merengue","Tango","Samba","Flamenco"],k:0},
+ {c:"GASTRONOMÍA",q:"¿Cómo se conoce el plato tradicional de arroz, habichuelas y carne?",a:["La paella","La bandera dominicana","El ceviche","El locro"],k:1},
+ {c:"DEPORTE",q:"¿Qué deporte es especialmente popular en República Dominicana?",a:["Críquet","Béisbol","Hockey sobre hielo","Rugby"],k:1},
+ {c:"DEPORTE",q:"En el béisbol, ¿cuántos strikes hacen que un bateador quede ponchado?",a:["Dos","Tres","Cuatro","Cinco"],k:1},
+ {c:"DEPORTE",q:"¿Qué debe hacer un jugador para anotar una carrera en béisbol?",a:["Llegar a home","Atrapar tres pelotas","Patear el balón","Cruzar la cancha"],k:0},
+ {c:"CULTURA",q:"¿Qué instrumento es característico del merengue típico?",a:["Acordeón","Arpa","Violín eléctrico","Flauta traversa"],k:0}
+];
+let player="", index=0, points=0, locked=false;
+const $=id=>document.getElementById(id);
+const sections=["home","game","result","ranks"];
+function show(id){sections.forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+function getRanks(){try{return JSON.parse(localStorage.getItem("retoRD_scores")||"[]")}catch(e){return []}}
+function setRanks(r){localStorage.setItem("retoRD_scores",JSON.stringify(r))}
+function start(){
+ const name=$("playerName").value.trim();
+ if(!name){$("playerName").focus();$("playerName").placeholder="Escribe tu nombre para comenzar";return}
+ player=name;index=0;points=0;locked=false;show("game");renderQuestion();
+}
+function renderQuestion(){
+ locked=false;const q=questions[index];
+ $("counter").textContent=`Pregunta ${index+1} de ${questions.length}`;
+ $("score").textContent=points;$("bar").style.width=`${index/questions.length*100}%`;
+ $("category").textContent=q.c;$("question").textContent=q.q;$("feedback").textContent="";$("nextBtn").classList.add("hidden");
+ $("answers").innerHTML="";
+ q.a.forEach((answer,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+i)+". "+answer;b.addEventListener("click",()=>choose(i,b));$("answers").appendChild(b)});
+}
+function choose(choice,button){
+ if(locked)return;locked=true;const q=questions[index];const buttons=[...$("answers").children];
+ buttons.forEach((b,i)=>{b.disabled=true;if(i===q.k)b.classList.add("correct")});
+ if(choice===q.k){points+=10;$("feedback").textContent="¡Correcto! +10 puntos ⭐";$("feedback").style.color="#65f5c4"}
+ else{$("feedback").textContent="¡Sigue intentando! La respuesta correcta está marcada.";$("feedback").style.color="#ffb4bd";button.classList.add("wrong")}
+ $("score").textContent=points;$("bar").style.width=`${(index+1)/questions.length*100}%`;
+ $("nextBtn").textContent=index===questions.length-1?"Ver resultado 🏆":"Siguiente ➜";$("nextBtn").classList.remove("hidden");
+}
+function next(){
+ if(index<questions.length-1){index++;renderQuestion();return}
+ const ranks=getRanks();ranks.push({name:player,score:points,date:Date.now()});setRanks(ranks);
+ $("resultText").textContent=`¡Buen trabajo, ${player}!`;
+ $("resultScore").textContent=`Obtuviste ${points} de ${questions.length*10} puntos.`;
+ show("result");
+}
+function renderRanks(){
+ const sorted=getRanks().sort((a,b)=>b.score-a.score||a.date-b.date);
+ const top=[sorted[1],sorted[0],sorted[2]];
+ const medals=["🥈","🥇","🥉"],classes=["second","first","third"];
+ $("podium").innerHTML="";
+ top.forEach((p,i)=>{const d=document.createElement("div");d.className="place "+classes[i];d.innerHTML=p?`<div class="medal">${medals[i]}</div><strong></strong><small>${p.score} puntos</small>`:`<div class="medal">${medals[i]}</div><strong>—</strong><small>Sin participante</small>`;if(p)d.querySelector("strong").textContent=p.name;$("podium").appendChild(d)});
+ $("rankingRows").innerHTML="";
+ sorted.forEach((p,i)=>{const tr=document.createElement("tr");const rank=i+1;[rank,p.name,p.score].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});$("rankingRows").appendChild(tr)});
+ if(!sorted.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=3;td.textContent="Todavía no hay participantes. ¡Sé el primero en jugar!";tr.appendChild(td);$("rankingRows").appendChild(tr)}
+ show("ranks");
+}
+$("startBtn").addEventListener("click",start);
+$("playerName").addEventListener("keydown",e=>{if(e.key==="Enter")start()});
+$("nextBtn").addEventListener("click",next);
+$("showRanks").addEventListener("click",renderRanks);
+$("toRanks").addEventListener("click",renderRanks);
+$("playAgain").addEventListener("click",()=>{show("home");$("playerName").value=""});
+$("backHome").addEventListener("click",()=>show("home"));
+$("resetRanks").addEventListener("click",()=>{if(confirm("¿Seguro que deseas borrar todos los puntajes guardados en este dispositivo?")){setRanks([]);renderRanks()}});
+</script>
+</body>
+</html>
